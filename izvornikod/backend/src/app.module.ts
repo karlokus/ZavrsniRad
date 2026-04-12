@@ -9,6 +9,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { InstrumentsModule } from './instruments/instruments.module';
 import { CategoriesModule } from './categories/categories.module';
+import { ArtistsModule } from './artists/artists.module';
+import { KeySignaturesModule } from './key-signatures/key-signatures.module';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 import appConfig from './config/app.config';
@@ -22,7 +24,7 @@ const ENV = process.env.NODE_ENV;
 /**
  * Korijenski modul aplikacije.
  *
- * Spaja sve feature module (Auth, Users, Instruments) i konfigurira:
+ * Spaja sve feature module (Auth, Users, Instruments, Categories, Artists, KeySignatures) i konfigurira:
  * - ConfigModule — globalno učitavanje .env varijabli s Joi validacijom
  * - TypeOrmModule — asinkrono spajanje na PostgreSQL bazu
  * - JwtModule — registracija JWT servisa za potpisivanje/verifikaciju tokena
@@ -63,6 +65,8 @@ const ENV = process.env.NODE_ENV;
     UsersModule, // Upravljanje korisnicima (profil, lozinka)
     InstrumentsModule, // Katalog instrumenata
     CategoriesModule, // Kategorije pjesama (user-owned)
+    ArtistsModule, // Katalog izvođača (shared)
+    KeySignaturesModule, // Katalog tonaliteta (shared, seeded)
   ],
   controllers: [AppController],
   providers: [
