@@ -20,7 +20,7 @@ export default Joi.object({
   DATABASE_USER: Joi.string().required(),
   DATABASE_PASSWORD: Joi.string().required(),
   DATABASE_NAME: Joi.string().required(),
-  DATABASE_SYNC: Joi.boolean().default(true),
+  DATABASE_SYNC: Joi.boolean().default(false),
   DATABASE_AUTOLOAD: Joi.boolean().default(true),
 
   // --- Postavke JWT autentikacije ---

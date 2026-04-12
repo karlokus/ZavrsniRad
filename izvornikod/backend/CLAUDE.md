@@ -65,7 +65,18 @@ Nema uloga ni vlasništva — samo: authenticated ili nije.
 - @CreateDateColumn() / @UpdateDateColumn() za timestampove
 - CASCADE delete na child entitetima (onDelete: 'CASCADE')
 - @Check constraint za range validaciju na DB razini
-- synchronize: true (migracije kasnije)
+- synchronize: false — shema se kontrolira migracijama
+
+## Migracije (TypeORM)
+- Standalone DataSource: `src/data-source.ts` (koristi dotenv, ne NestJS ConfigService)
+- Workflow za promjenu sheme:
+  1. Izmijeni entitet (.entity.ts)
+  2. `npm run migration:generate --name=OpisPromjene`
+  3. Provjeri generiranu migraciju u `src/migrations/`
+  4. `npm run migration:run`
+  5. Za rollback: `npm run migration:revert`
+- Migracije se pokreću ručno (CLI), ne na startup aplikacije
+- Imenovanje: PascalCase, opisno (AddColorToCategory, CreateCompositionTable)
 
 ## Swagger obrazac
 - DocumentBuilder s addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'access-token')
