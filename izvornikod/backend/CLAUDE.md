@@ -71,7 +71,7 @@ Nema uloga ni vlasništva — samo: authenticated ili nije.
 - Standalone DataSource: `src/data-source.ts` (koristi dotenv, ne NestJS ConfigService)
 - Workflow za promjenu sheme:
   1. Izmijeni entitet (.entity.ts)
-  2. `npm run migration:generate --name=OpisPromjene`
+  2. `npm run migration:generate -- src/migrations/OpisPromjene`
   3. Provjeri generiranu migraciju u `src/migrations/`
   4. `npm run migration:run`
   5. Za rollback: `npm run migration:revert`
