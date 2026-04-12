@@ -6,9 +6,11 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { ChangePasswordDto } from '../dtos/change-password.dto';
 import { FindUserProvider } from './find-user.provider';
+import { CreateUserProvider } from './create-user.provider';
 import { UpdateUserProvider } from './update-user.provider';
 import { HashingProvider } from '../../auth/providers/hashing.provider';
 
@@ -19,9 +21,7 @@ import { HashingProvider } from '../../auth/providers/hashing.provider';
  * specijaliziranim providerima. Pokriva funkcionalne zahtjeve:
  * - FZ-U03: Pregled i ažuriranje profila
  * - FZ-U04: Promjena lozinke
- *
- * Napomena: Kreiranje korisnika se obavlja kroz AuthService.signUp,
- * ne kroz ovaj servis.
+ * - CRUD po ID-u za admin pristup putem Swaggera
  */
 @Injectable()
 export class UsersService {
@@ -32,6 +32,8 @@ export class UsersService {
 
     /** Provider za pronalaženje korisnika */
     private readonly findUserProvider: FindUserProvider,
+    /** Provider za kreiranje korisnika */
+    private readonly createUserProvider: CreateUserProvider,
     /** Provider za ažuriranje profila */
     private readonly updateUserProvider: UpdateUserProvider,
     /** Provider za hashiranje i usporedbu lozinki */
@@ -39,9 +41,19 @@ export class UsersService {
   ) {}
 
   /**
+   * Kreira novog korisnika — delegira na CreateUserProvider.
+   *
+   * @param createUserDto - Podaci za kreiranje korisnika
+   * @returns Kreirani User entitet
+   */
+  public async createUser(createUserDto: CreateUserDto): Promise<User> {
+    return this.createUserProvider.createUser(createUserDto);
+  }
+
+  /**
    * Dohvaća profil korisnika po ID-u.
    *
-   * @param id - UUID korisnika (iz JWT payloada)
+   * @param id - UUID korisnika (iz JWT payloada ili URL parametra)
    * @returns User entitet (bez passwordHash zahvaljujući @Exclude)
    * @throws NotFoundException — ako korisnik ne postoji
    */
