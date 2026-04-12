@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { InstrumentsModule } from './instruments/instruments.module';
+import { CategoriesModule } from './categories/categories.module';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 import appConfig from './config/app.config';
@@ -61,6 +62,7 @@ const ENV = process.env.NODE_ENV;
     AuthModule, // Autentikacija (sign-in, sign-up, refresh tokeni)
     UsersModule, // Upravljanje korisnicima (profil, lozinka)
     InstrumentsModule, // Katalog instrumenata
+    CategoriesModule, // Kategorije pjesama (user-owned)
   ],
   controllers: [AppController],
   providers: [
