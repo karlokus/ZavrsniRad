@@ -44,7 +44,7 @@ export class FindCompositionProvider {
     // Dohvat s relacijama za prikaz izvođača i tonaliteta
     const composition = await this.compositionsRepository.findOne({
       where: { id },
-      relations: ['user', 'artist', 'keySignature'],
+      relations: ['user', 'artist', 'keySignature', 'categories'],
     });
 
     // Kompozicija ne postoji

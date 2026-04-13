@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Composition } from '../../compositions/entities/composition.entity';
 
 /**
  * Entitet kategorije pjesama prema specifikaciji (sekcija 3.2).
@@ -18,7 +20,7 @@ import { User } from '../../users/entities/user.entity';
  *
  * Relacije:
  * - ManyToOne → User (vlasnik kategorije, onDelete: CASCADE)
- * - OneToMany → Composition (buduća implementacija)
+ * - ManyToMany → Composition (inverzna strana, owning side je Composition)
  *
  * Relevantni FZ: R03, R04, R05, R07
  */
@@ -56,6 +58,11 @@ export class Category {
     nullable: true,
   })
   color?: string | null;
+
+  // ── Kompozicije (M:N inverzna strana) ──
+  // Owning side je Composition entitet (@JoinTable tamo)
+  @ManyToMany(() => Composition, (composition) => composition.categories)
+  compositions!: Composition[];
 
   /** Datum kreiranja kategorije — automatski postavljen pri kreiranju */
   @CreateDateColumn({
