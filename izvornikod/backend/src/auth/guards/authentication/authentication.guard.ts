@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -69,7 +70,12 @@ export class AuthenticationGuard implements CanActivate {
     for (const instance of guards) {
       const canActivate = await Promise.resolve(
         instance.canActivate(context),
-      ).catch((err) => ({ error: err })); // Ako guard baci grešku, tretira se kao neuspjeh
+      ).catch((err) => {
+        // ForbiddenException (blokirani korisnik) se propagira dalje
+        if (err instanceof ForbiddenException) throw err;
+        // Sve ostale greške (nema tokena, neispravan token) → guard nije prošao
+        return false;
+      });
 
       if (canActivate) {
         return true;

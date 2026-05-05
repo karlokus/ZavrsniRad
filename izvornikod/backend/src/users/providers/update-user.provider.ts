@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
   RequestTimeoutException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -69,14 +70,19 @@ export class UpdateUserProvider {
       // Spremanje ažuriranog korisnika u bazu
       return await this.usersRepository.save(user);
     } catch (error: unknown) {
-      // Hvatanje PostgreSQL unique constraint greške za email
-      if (error instanceof Error && 'detail' in error) {
-        const detail = (error as { detail: string }).detail;
-        if (detail.includes('email')) {
+      if (error instanceof Error) {
+        // PostgreSQL foreign key violation (23503) — nepostojeci instrumentId
+        if ('code' in error && (error as { code: string }).code === '23503') {
+          throw new NotFoundException('Referenced entity not found');
+        }
+        // PostgreSQL unique constraint greška za email
+        if (
+          'detail' in error &&
+          (error as { detail: string }).detail.includes('email')
+        ) {
           throw new ConflictException('Email must be unique');
         }
       }
-      // Sve ostale greške → generička poruka
       throw new RequestTimeoutException(
         'Unable to process your request at the moment, please try later',
         { description: 'Error connecting to the database' },

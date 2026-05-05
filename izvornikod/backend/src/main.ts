@@ -1,5 +1,5 @@
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
@@ -14,6 +14,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   // Kreiranje NestJS aplikacije s root modulom
   const app = await NestFactory.create(AppModule);
+
+  // Globalni ClassSerializerInterceptor — primjenjuje @Exclude() dekoratore na entitetima
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   // Globalna ValidationPipe — automatski validira sve dolazne DTO-ove
   app.useGlobalPipes(
