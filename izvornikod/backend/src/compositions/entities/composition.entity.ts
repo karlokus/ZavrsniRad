@@ -6,6 +6,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -13,6 +14,7 @@ import { User } from '../../users/entities/user.entity';
 import { Artist } from '../../artists/entities/artist.entity';
 import { KeySignature } from '../../key-signatures/entities/key-signature.entity';
 import { Category } from '../../categories/entities/category.entity';
+import { CompositionTargetArea } from '../../composition-target-areas/entities/composition-target-area.entity';
 import { CompositionType } from '../enums/composition-type.enum';
 
 /**
@@ -105,6 +107,14 @@ export class Composition {
     inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' },
   })
   categories?: Category[];
+
+  // ── Target areas (1:N inverzna strana) ──
+  // Owning side je CompositionTargetArea entitet (drži compositionId FK)
+  @OneToMany(
+    () => CompositionTargetArea,
+    (targetArea) => targetArea.composition,
+  )
+  targetAreas?: CompositionTargetArea[];
 
   // ── Automatski timestampovi ──
   @CreateDateColumn({ type: 'timestamp' })

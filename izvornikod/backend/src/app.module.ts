@@ -12,6 +12,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { ArtistsModule } from './artists/artists.module';
 import { KeySignaturesModule } from './key-signatures/key-signatures.module';
 import { CompositionsModule } from './compositions/compositions.module';
+import { CompositionTargetAreasModule } from './composition-target-areas/composition-target-areas.module';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 import appConfig from './config/app.config';
@@ -69,6 +70,7 @@ const ENV = process.env.NODE_ENV;
     ArtistsModule, // Katalog izvođača (shared)
     KeySignaturesModule, // Katalog tonaliteta (shared, seeded)
     CompositionsModule, // Kompozicije (SONG + EXERCISE)
+    CompositionTargetAreasModule, // Target areas (FZ-L11, FZ-L12) — sub-resurs Compositiona
   ],
   controllers: [AppController],
   providers: [

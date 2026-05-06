@@ -61,7 +61,13 @@ export class FindCompositionProvider {
   ): Promise<Composition | null> {
     const composition = await this.compositionsRepository.findOne({
       where: { id },
-      relations: ['user', 'artist', 'keySignature', 'categories'],
+      relations: [
+        'user',
+        'artist',
+        'keySignature',
+        'categories',
+        'targetAreas',
+      ],
     });
 
     if (!composition) return null;
