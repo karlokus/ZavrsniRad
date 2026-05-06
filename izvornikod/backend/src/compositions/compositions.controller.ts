@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -19,6 +20,7 @@ import {
 import { CompositionsService } from './providers/compositions.service';
 import { CreateCompositionDto } from './dtos/create-composition.dto';
 import { UpdateCompositionDto } from './dtos/update-composition.dto';
+import { QueryCompositionsDto } from './dtos/query-compositions.dto';
 import { SetCategoriesDto } from './dtos/set-categories.dto';
 import { UserPayload } from '../auth/decorators/user-payload.decorator';
 
@@ -80,19 +82,30 @@ export class CompositionsController {
   }
 
   /**
-   * Dohvaćanje svih kompozicija dostupnih korisniku.
+   * Dohvaćanje paginirane liste kompozicija dostupnih korisniku
+   * uz dinamičke filtere i sortiranje (FZ-R05–R07).
    *
    * Vraća sve SONG kompozicije čiji je vlasnik aktivni korisnik
-   * te sve EXERCISE kompozicije (dostupne svim korisnicima).
+   * te sve EXERCISE kompozicije (dostupne svim korisnicima),
+   * filtrirane prema query parametrima.
    *
    * @param userId - UUID korisnika iz JWT-a
-   * @returns Lista kompozicija sortirana po naslovu (A-Z)
+   * @param query - Query parametri (search, filter, sort, paginacija)
+   * @returns Paginirani rezultat { items, total, page, limit }
    */
   @Get()
-  @ApiOperation({ summary: 'Dohvat svih kompozicija korisnika + vježbi' })
-  @ApiResponse({ status: 200, description: 'Lista kompozicija' })
-  public findAll(@UserPayload('sub') userId: string) {
-    return this.compositionsService.findAll(userId);
+  @ApiOperation({
+    summary: 'Pretraga/filter/sort kompozicija s paginacijom',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginirana lista kompozicija { items, total, page, limit }',
+  })
+  public findAll(
+    @UserPayload('sub') userId: string,
+    @Query() query: QueryCompositionsDto,
+  ) {
+    return this.compositionsService.findAll(userId, query);
   }
 
   /**

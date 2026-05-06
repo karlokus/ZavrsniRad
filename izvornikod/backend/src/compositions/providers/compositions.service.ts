@@ -6,7 +6,11 @@ import {
 import { Composition } from '../entities/composition.entity';
 import { CreateCompositionDto } from '../dtos/create-composition.dto';
 import { UpdateCompositionDto } from '../dtos/update-composition.dto';
-import { FindCompositionProvider } from './find-composition.provider';
+import { QueryCompositionsDto } from '../dtos/query-compositions.dto';
+import {
+  FindCompositionProvider,
+  PaginatedCompositions,
+} from './find-composition.provider';
 import { CreateCompositionProvider } from './create-composition.provider';
 import { UpdateCompositionProvider } from './update-composition.provider';
 import { DeleteCompositionProvider } from './delete-composition.provider';
@@ -62,15 +66,21 @@ export class CompositionsService {
   }
 
   /**
-   * Dohvaća sve kompozicije dostupne korisniku.
+   * Dohvaća paginiranu listu kompozicija dostupnih korisniku
+   * uz dinamičke filtere i sortiranje (FZ-R05–R07).
    *
-   * Vraća korisnikove SONG-ove + sve EXERCISE kompozicije.
+   * Vraća korisnikove SONG-ove + sve EXERCISE kompozicije,
+   * filtrirane prema poljima u QueryCompositionsDto.
    *
    * @param userId - UUID aktivnog korisnika iz JWT-a
-   * @returns Lista kompozicija
+   * @param query - DTO s filter/sort/paginacija parametrima
+   * @returns Paginirani rezultat { items, total, page, limit }
    */
-  public async findAll(userId: string): Promise<Composition[]> {
-    return this.findCompositionProvider.findAllByUser(userId);
+  public async findAll(
+    userId: string,
+    query: QueryCompositionsDto,
+  ): Promise<PaginatedCompositions> {
+    return this.findCompositionProvider.findAllByUser(userId, query);
   }
 
   /**
