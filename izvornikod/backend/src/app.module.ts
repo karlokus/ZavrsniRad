@@ -14,10 +14,12 @@ import { KeySignaturesModule } from './key-signatures/key-signatures.module';
 import { CompositionsModule } from './compositions/compositions.module';
 import { CompositionTargetAreasModule } from './composition-target-areas/composition-target-areas.module';
 import { MasteryLogsModule } from './mastery-logs/mastery-logs.module';
+import { CompositionFilesModule } from './composition-files/composition-files.module';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
+import storageConfig from './config/storage.config';
 import jwtConfig from './config/jwt.config';
 import environmentValidation from './config/environment.validation';
 
@@ -39,7 +41,7 @@ const ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true, // ConfigService dostupan u svim modulima bez ponovnog importa
       envFilePath: !ENV ? '.env' : `.env.${ENV}`, // .env za default, .env.development za dev
-      load: [appConfig, databaseConfig], // Registracija config namespace-ova
+      load: [appConfig, databaseConfig, storageConfig], // Registracija config namespace-ova
       validationSchema: environmentValidation, // Joi validacija env varijabli pri pokretanju
     }),
 
@@ -73,6 +75,7 @@ const ENV = process.env.NODE_ENV;
     CompositionsModule, // Kompozicije (SONG + EXERCISE)
     CompositionTargetAreasModule, // Target areas (FZ-L11, FZ-L12) — sub-resurs Compositiona
     MasteryLogsModule, // Povijest mastery promjena (FZ-R15, FZ-R16, FZ-R17)
+    CompositionFilesModule, // Datoteke kompozicija na Backblaze B2 (FZ-R08–R13)
   ],
   controllers: [AppController],
   providers: [
