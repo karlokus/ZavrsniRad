@@ -15,6 +15,7 @@ import { CompositionsModule } from './compositions/compositions.module';
 import { CompositionTargetAreasModule } from './composition-target-areas/composition-target-areas.module';
 import { MasteryLogsModule } from './mastery-logs/mastery-logs.module';
 import { CompositionFilesModule } from './composition-files/composition-files.module';
+import { SetlistsModule } from './setlists/setlists.module';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 import appConfig from './config/app.config';
@@ -76,6 +77,7 @@ const ENV = process.env.NODE_ENV;
     CompositionTargetAreasModule, // Target areas (FZ-L11, FZ-L12) — sub-resurs Compositiona
     MasteryLogsModule, // Povijest mastery promjena (FZ-R15, FZ-R16, FZ-R17)
     CompositionFilesModule, // Datoteke kompozicija na Backblaze B2 (FZ-R08–R13)
+    SetlistsModule, // Setliste pjesama (FZ-R18, FZ-R19, FZ-R20)
   ],
   controllers: [AppController],
   providers: [
