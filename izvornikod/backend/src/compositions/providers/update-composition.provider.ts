@@ -13,6 +13,7 @@ import { FindArtistProvider } from '../../artists/providers/find-artist.provider
 import { FindKeySignatureProvider } from '../../key-signatures/providers/find-key-signature.provider';
 import { Artist } from '../../artists/entities/artist.entity';
 import { KeySignature } from '../../key-signatures/entities/key-signature.entity';
+import { CreateMasteryLogProvider } from '../../mastery-logs/providers/create-mastery-log.provider';
 
 /**
  * Provider za ažuriranje kompozicija.
@@ -36,6 +37,9 @@ export class UpdateCompositionProvider {
 
     /** Provider za validaciju tonaliteta */
     private readonly findKeySignatureProvider: FindKeySignatureProvider,
+
+    /** Provider za bilježenje mastery promjena (FZ-R15-R17) */
+    private readonly createMasteryLogProvider: CreateMasteryLogProvider,
   ) {}
 
   /**
@@ -97,6 +101,13 @@ export class UpdateCompositionProvider {
       }
     }
 
+    // Snapshot starih mastery vrijednosti prije merge-a — koristi se za audit log
+    const oldMastery = {
+      notes: composition.notesMastery,
+      lyrics: composition.lyricsMastery,
+      playing: composition.playingMastery,
+    };
+
     // Ažuriranje skalarnih polja — nullish coalescing čuva postojeće vrijednosti
     composition.title = updateCompositionDto.title ?? composition.title;
     composition.tempoBpm =
@@ -127,7 +138,21 @@ export class UpdateCompositionProvider {
 
     // Spremanje ažuriranog entiteta
     try {
-      return await this.compositionsRepository.save(composition);
+      const saved = await this.compositionsRepository.save(composition);
+
+      // Audit log mastery promjena (FZ-R15-R17) — fire-and-forget,
+      // ne smije srušiti glavni update flow ako log padne
+      await this.createMasteryLogProvider.logChanges(
+        saved.id,
+        oldMastery,
+        {
+          notes: saved.notesMastery,
+          lyrics: saved.lyricsMastery,
+          playing: saved.playingMastery,
+        },
+      );
+
+      return saved;
     } catch (error: unknown) {
       const errMessage = (error as Error).message;
       throw new RequestTimeoutException(

@@ -13,6 +13,7 @@ import { ArtistsModule } from './artists/artists.module';
 import { KeySignaturesModule } from './key-signatures/key-signatures.module';
 import { CompositionsModule } from './compositions/compositions.module';
 import { CompositionTargetAreasModule } from './composition-target-areas/composition-target-areas.module';
+import { MasteryLogsModule } from './mastery-logs/mastery-logs.module';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 import appConfig from './config/app.config';
@@ -71,6 +72,7 @@ const ENV = process.env.NODE_ENV;
     KeySignaturesModule, // Katalog tonaliteta (shared, seeded)
     CompositionsModule, // Kompozicije (SONG + EXERCISE)
     CompositionTargetAreasModule, // Target areas (FZ-L11, FZ-L12) — sub-resurs Compositiona
+    MasteryLogsModule, // Povijest mastery promjena (FZ-R15, FZ-R16, FZ-R17)
   ],
   controllers: [AppController],
   providers: [

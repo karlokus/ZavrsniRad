@@ -11,6 +11,7 @@ import { ManageCompositionCategoriesProvider } from './providers/manage-composit
 import { ArtistsModule } from '../artists/artists.module';
 import { KeySignaturesModule } from '../key-signatures/key-signatures.module';
 import { CategoriesModule } from '../categories/categories.module';
+import { MasteryLogsModule } from '../mastery-logs/mastery-logs.module';
 
 /**
  * Modul za upravljanje kompozicijama (SONG + EXERCISE).
@@ -44,6 +45,8 @@ import { CategoriesModule } from '../categories/categories.module';
     KeySignaturesModule,
     // CategoriesModule za FindCategoryProvider — validacija vlasništva kategorija pri pridruživanju
     CategoriesModule,
+    // MasteryLogsModule za CreateMasteryLogProvider — bilježenje mastery promjena (FZ-R15-R17)
+    MasteryLogsModule,
   ],
   exports: [
     // TypeOrmModule za pristup Composition repozitoriju u drugim modulima
