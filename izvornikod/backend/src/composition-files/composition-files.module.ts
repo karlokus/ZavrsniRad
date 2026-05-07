@@ -10,6 +10,7 @@ import { FindCompositionFileProvider } from './providers/find-composition-file.p
 import { DeleteCompositionFileProvider } from './providers/delete-composition-file.provider';
 import { FileStorageProvider } from './providers/file-storage.provider';
 import { B2ClientProvider } from './providers/b2-client.provider';
+import { MidiParserProvider } from './providers/midi-parser.provider';
 import { CompositionsModule } from '../compositions/compositions.module';
 import { InstrumentsModule } from '../instruments/instruments.module';
 import storageConfig from '../config/storage.config';
@@ -30,6 +31,7 @@ import storageConfig from '../config/storage.config';
     DeleteCompositionFileProvider,
     FileStorageProvider,
     B2ClientProvider,
+    MidiParserProvider,
   ],
   imports: [
     ConfigModule.forFeature(storageConfig),

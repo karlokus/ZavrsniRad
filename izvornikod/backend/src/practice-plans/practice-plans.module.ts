@@ -29,6 +29,6 @@ import { CompositionsModule } from '../compositions/compositions.module';
     TypeOrmModule.forFeature([PracticePlan, PracticePlanSong]),
     CompositionsModule, // FindCompositionProvider
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, StreakCalculatorProvider],
 })
 export class PracticePlansModule {}

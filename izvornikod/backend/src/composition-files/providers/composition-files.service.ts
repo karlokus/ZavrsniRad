@@ -5,6 +5,7 @@ import { CreateCompositionFileProvider } from './create-composition-file.provide
 import { FindCompositionFileProvider } from './find-composition-file.provider';
 import { DeleteCompositionFileProvider } from './delete-composition-file.provider';
 import { FileStorageProvider } from './file-storage.provider';
+import { MidiParserProvider } from './midi-parser.provider';
 import { FindCompositionProvider } from '../../compositions/providers/find-composition.provider';
 import { Readable } from 'stream';
 
@@ -19,7 +20,12 @@ export class CompositionFilesService {
     private readonly deleteProvider: DeleteCompositionFileProvider,
     private readonly fileStorageProvider: FileStorageProvider,
     private readonly findCompositionProvider: FindCompositionProvider,
+    private readonly midiParserProvider: MidiParserProvider,
   ) {}
+
+  public parseMidi(fileId: string, userId: string) {
+    return this.midiParserProvider.parse(fileId, userId);
+  }
 
   public uploadFile(
     compositionId: string,

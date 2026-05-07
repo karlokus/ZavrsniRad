@@ -139,6 +139,23 @@ export class CompositionFilesController {
     stream.pipe(res);
   }
 
+  @Get('composition-files/:fileId/midi-data')
+  @ApiOperation({
+    summary:
+      'Parsirani MIDI sadržaj (FZ-L01) — JSON za Tone.js vizualizaciju',
+  })
+  @ApiParam({ name: 'fileId', format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'ParsedMidiData JSON' })
+  @ApiResponse({ status: 400, description: 'Datoteka nije MIDI tipa' })
+  @ApiResponse({ status: 403, description: 'Nemate pristup ovoj datoteci' })
+  @ApiResponse({ status: 404, description: 'Datoteka nije pronađena' })
+  public parseMidi(
+    @Param('fileId', ParseUUIDPipe) fileId: string,
+    @UserPayload('sub') userId: string,
+  ) {
+    return this.compositionFilesService.parseMidi(fileId, userId);
+  }
+
   @Delete('composition-files/:fileId')
   @ApiOperation({ summary: 'Brisanje datoteke (B2 + DB)' })
   @ApiParam({ name: 'fileId', format: 'uuid' })

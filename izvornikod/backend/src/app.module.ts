@@ -18,6 +18,8 @@ import { CompositionFilesModule } from './composition-files/composition-files.mo
 import { SetlistsModule } from './setlists/setlists.module';
 import { PracticeSessionsModule } from './practice-sessions/practice-sessions.module';
 import { PracticePlansModule } from './practice-plans/practice-plans.module';
+import { ExercisesModule } from './exercises/exercises.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 import appConfig from './config/app.config';
@@ -82,6 +84,8 @@ const ENV = process.env.NODE_ENV;
     SetlistsModule, // Setliste pjesama (FZ-R18, FZ-R19, FZ-R20)
     PracticeSessionsModule, // Sesije vjezbanja s metrikama (FZ-L07–L10)
     PracticePlansModule, // Dnevni planovi vjezbanja (FZ-L16–L19)
+    ExercisesModule, // Preporuka vjezbi (FZ-L13–L15) + seed
+    DashboardModule, // Read-only agregacije (FZ-D01–FZ-D06)
   ],
   controllers: [AppController],
   providers: [
