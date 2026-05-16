@@ -1,0 +1,4 @@
+/* TODO(§5.3 / §9): pravi auth split-layout + dizajn tokeni. */
+.auth-wrap {
+  min-height: 100dvh;
+}

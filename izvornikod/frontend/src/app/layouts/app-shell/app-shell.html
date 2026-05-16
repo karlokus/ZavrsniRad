@@ -1,0 +1,16 @@
+<!-- TODO(§4/§5): zamijeniti pravim Sidebar + Topbar. Privremeni nav za testiranje rutanja. -->
+<div class="app">
+  <nav class="app__nav" aria-label="Glavna navigacija">
+    <strong class="app__brand">Metronoma</strong>
+    <ul>
+      @for (link of navLinks; track link.path) {
+        <li>
+          <a [routerLink]="link.path" routerLinkActive="is-active">{{ link.label }}</a>
+        </li>
+      }
+    </ul>
+  </nav>
+  <main class="app__main">
+    <router-outlet />
+  </main>
+</div>
