@@ -1,4 +1,13 @@
-<!-- TODO(§5.3): split layout 1fr 1fr (brand aside + forma). Zasad passthrough. -->
 <div class="auth-wrap">
-  <router-outlet />
+  <aside class="auth-aside">
+    <div class="auth-aside__inner">
+      <span class="auth-aside__brand">Metronoma</span>
+      <blockquote class="auth-aside__quote serif">
+        "Glazba je jezik koji govori dušama."
+      </blockquote>
+    </div>
+  </aside>
+  <div class="auth-form-col">
+    <router-outlet />
+  </div>
 </div>

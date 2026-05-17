@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { AuthStateService } from './core/auth/auth-state.service';
 import { AuthService } from './core/auth/auth.service';
+import { LookupsService } from './core/lookups/lookups.service';
 import { authInterceptor } from './core/auth/auth.interceptor';
 import { ENV } from './core/config/environment.token';
 import { baseUrlInterceptor } from './core/http/base-url.interceptor';
@@ -30,6 +31,10 @@ export const appConfig: ApplicationConfig = {
       const auth = inject(AuthService);
       if (!state.accessToken()) return;
       return auth.loadMe().pipe(catchError(() => of(null)));
+    }),
+    provideAppInitializer(() => {
+      const lookups = inject(LookupsService);
+      return lookups.loadAll().pipe(catchError(() => of(null)));
     }),
   ],
 };
