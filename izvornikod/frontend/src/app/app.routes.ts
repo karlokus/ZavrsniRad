@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { authGuard, publicOnlyGuard } from './core/auth/auth.guard';
+import { MidiPlayerService } from './features/practice-player/midi-player.service';
 import { practiceMidiResolver } from './features/practice-player/practice-midi.resolver';
 
 /**
@@ -113,6 +114,9 @@ export const routes: Routes = [
       {
         path: 'practice/:compositionId',
         title: 'Vježbanje',
+        // Route-scoped: injector dies on route leave → MidiPlayerService.ngOnDestroy
+        // runs automatically, tearing down Tone.Transport/synth/ticker.
+        providers: [MidiPlayerService],
         resolve: { midi: practiceMidiResolver },
         loadComponent: () =>
           import('./features/practice-player/practice-player.page').then(

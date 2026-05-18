@@ -5,8 +5,18 @@ import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from
 import { AuthStateService } from './auth-state.service';
 import { AuthService } from './auth.service';
 
+/**
+ * Refresh outcome broadcast to requests that arrived mid-refresh.
+ * `failed` is the critical state: without it, queued requests would
+ * subscribe forever waiting for a token that never comes.
+ */
+type RefreshState =
+  | { status: 'pending' }
+  | { status: 'success'; token: string }
+  | { status: 'failed' };
+
 let isRefreshing = false;
-const refresh$ = new BehaviorSubject<string | null>(null);
+const refresh$ = new BehaviorSubject<RefreshState>({ status: 'pending' });
 
 function shouldSkipAuth(url: string): boolean {
   return (
@@ -37,17 +47,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
       if (!isRefreshing) {
         isRefreshing = true;
-        refresh$.next(null);
+        refresh$.next({ status: 'pending' });
 
         return auth.refresh().pipe(
           switchMap((pair) => {
             isRefreshing = false;
-            refresh$.next(pair.accessToken);
+            refresh$.next({ status: 'success', token: pair.accessToken });
             return next(withBearer(req, pair.accessToken));
           }),
           catchError((refreshErr) => {
             isRefreshing = false;
-            refresh$.next(null);
+            refresh$.next({ status: 'failed' });
             state.signOut();
             void router.navigate(['/auth/sign-in']);
             return throwError(() => refreshErr);
@@ -56,9 +66,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       return refresh$.pipe(
-        filter((t): t is string => t !== null),
+        filter((s) => s.status !== 'pending'),
         take(1),
-        switchMap((newToken) => next(withBearer(req, newToken))),
+        switchMap((s) =>
+          s.status === 'success' ? next(withBearer(req, s.token)) : throwError(() => err),
+        ),
       );
     }),
   );
