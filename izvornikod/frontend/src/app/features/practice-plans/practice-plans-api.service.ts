@@ -23,8 +23,27 @@ export class PracticePlansApiService {
     let p = new HttpParams();
     if (params.dateFrom) p = p.set('dateFrom', params.dateFrom);
     if (params.dateTo) p = p.set('dateTo', params.dateTo);
+    // isCompleted MUST go over the wire as the literal string 'true'|'false'
+    // (see QueryPracticePlansParams doc — enableImplicitConversion gotcha).
     if (params.isCompleted !== undefined) p = p.set('isCompleted', params.isCompleted);
     return this.http.get<PracticePlan[]>('/practice-plans', { params: p });
+  }
+
+  /**
+   * Ergonomic wrapper for the calendar (§6.6 lazy materialization): callers
+   * pass a real boolean; the string conversion for `isCompleted` is done
+   * here, in one place, so the gotcha never leaks to callers.
+   */
+  listInRange(
+    dateFrom: string,
+    dateTo: string,
+    completed?: boolean,
+  ): Observable<PracticePlan[]> {
+    return this.list({
+      dateFrom,
+      dateTo,
+      isCompleted: completed === undefined ? undefined : completed ? 'true' : 'false',
+    });
   }
 
   getById(id: string): Observable<PracticePlan> {

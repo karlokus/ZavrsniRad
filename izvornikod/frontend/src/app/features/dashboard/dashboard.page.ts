@@ -15,11 +15,12 @@ import { MasteryDots } from '../../shared/ui/mastery-dots/mastery-dots';
 import { Skeleton } from '../../shared/ui/skeleton/skeleton';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
+import { StreakWidget } from '../practice-plans/streak-widget.component';
 
 @Component({
   selector: 'app-dashboard-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, Stat, Card, MasteryDots, Skeleton, Button, Icon],
+  imports: [RouterLink, Stat, Card, MasteryDots, Skeleton, Button, Icon, StreakWidget],
   template: `
     <div class="dashboard">
       <div class="dash-head">
@@ -33,7 +34,6 @@ import { Icon } from '../../shared/ui/icon/icon';
         @if (summaryLoading()) {
           <app-skeleton height="90" />
           <app-skeleton height="90" />
-          <app-skeleton height="90" />
         } @else {
           <app-stat
             label="Pjesme u repertoaru"
@@ -44,12 +44,9 @@ import { Icon } from '../../shared/ui/icon/icon';
             [value]="summary()?.learnedCount ?? 0"
             [sub]="learnedSub()"
           />
-          <app-stat
-            label="Streak (dani)"
-            [value]="summary()?.activeStreak ?? 0"
-            deltaKind="good"
-          />
         }
+        <!-- Streak iz GET /practice-plans/streak (§6.6), neovisno učitavanje -->
+        <app-streak-widget />
       </div>
 
       <!-- Needs practice -->
@@ -70,8 +67,8 @@ import { Icon } from '../../shared/ui/icon/icon';
           <p class="empty-note">Sve pjesme su na visokom nivou!</p>
         } @else {
           <div class="practice-list">
-            @for (item of needsPractice(); track item.id) {
-              <a class="practice-row" [routerLink]="['/repertoire', item.id]">
+            @for (item of needsPractice(); track item.compositionId) {
+              <a class="practice-row" [routerLink]="['/repertoire', item.compositionId]">
                 <span class="practice-title">{{ item.title }}</span>
                 <app-mastery-dots [value]="round(item.avgMastery)" warm />
               </a>

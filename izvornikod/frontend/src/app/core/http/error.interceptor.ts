@@ -13,7 +13,15 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       if (err.status === 413) {
-        toast.error('Datoteka je prevelika. Smanji veličinu i pokušaj ponovo.');
+        // Backend PayloadTooLargeException carries the configured limit,
+        // e.g. "Datoteka prelazi maksimum od 50 MB" — prefer it so the
+        // user sees the actual max; fall back to a generic hint.
+        const msg = err.error?.message;
+        toast.error(
+          typeof msg === 'string' && msg.trim()
+            ? msg
+            : 'Datoteka je prevelika. Smanji veličinu i pokušaj ponovo.',
+        );
       } else if (err.status === 0) {
         toast.error('Nema veze s poslužiteljem. Provjeri internet i pokušaj ponovo.');
       } else if (err.status >= 500) {

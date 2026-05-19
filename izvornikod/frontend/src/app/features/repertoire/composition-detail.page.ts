@@ -18,11 +18,12 @@ import { MasteryDots } from '../../shared/ui/mastery-dots/mastery-dots';
 import { Chip } from '../../shared/ui/chip/chip';
 import { Spinner } from '../../shared/ui/spinner/spinner';
 import { Icon } from '../../shared/ui/icon/icon';
+import { FilesPanel } from '../practice-player/files-panel.component';
 
 @Component({
   selector: 'app-composition-detail-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, Card, Button, MasteryDots, Chip, Spinner, Icon],
+  imports: [RouterLink, Card, Button, MasteryDots, Chip, Spinner, Icon, FilesPanel],
   template: `
     @if (loading()) {
       <div class="center"><app-spinner /></div>
@@ -121,6 +122,10 @@ import { Icon } from '../../shared/ui/icon/icon';
               <p class="description">{{ composition()!.description }}</p>
             </app-card>
           }
+
+          <app-card title="Datoteke" class="full-width">
+            <app-files-panel [compositionId]="id()" />
+          </app-card>
         </div>
       </div>
     }

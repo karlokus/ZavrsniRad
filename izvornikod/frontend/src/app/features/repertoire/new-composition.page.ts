@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 import { CompositionsApiService } from './compositions-api.service';
 import { CompositionFormComponent, CompositionFormValue } from './composition-form.component';
 import { ToastService } from '../../core/notifications/toast.service';
@@ -40,9 +40,7 @@ export class NewCompositionPage {
       .create(dto)
       .pipe(
         switchMap((comp) =>
-          this.api.setCategories(comp.id, categoryIds).pipe(
-            switchMap(() => [comp]),
-          ),
+          this.api.setCategories(comp.id, categoryIds).pipe(map(() => comp)),
         ),
       )
       .subscribe({

@@ -3,10 +3,9 @@ import { RouterOutlet } from '@angular/router';
 
 /**
  * Auth shell — okvir za /auth rute (sign-in, sign-up).
- *
- * TODO(§5.3 — Faza 1 styling): `.auth-wrap` grid `1fr 1fr`, lijevo
- * `.auth-aside` (brand + Instrument Serif quote), desno `.auth-form`.
- * Zasad samo prazni okvir oko <router-outlet />.
+ * Raspored u `auth-shell.html`/`.css`: `.auth-wrap` grid 1fr/1fr —
+ * lijevo `.auth-aside` (brand + Instrument Serif citat), desno forma;
+ * ispod 768px aside se skriva (§5.3).
  */
 @Component({
   selector: 'app-auth-shell',

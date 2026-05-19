@@ -77,9 +77,22 @@ export class CompositionFilesApiService {
     return this.http.get<ParsedMidiData>(`/composition-files/${fileId}/midi-data`);
   }
 
-  /** Returns the backend-proxied download URL (use as href or for fetch). */
+  /** Relative proxy path (for reference / non-auth contexts). */
   downloadUrl(fileId: string): string {
     return `/composition-files/${fileId}/download`;
+  }
+
+  /**
+   * Fetches the same-origin proxy stream as a Blob *through HttpClient* so
+   * the auth + base-url interceptors apply (a bare <audio src>/<a href>
+   * can't send the Bearer token). Caller wraps it in an object URL.
+   * Used for audio playback and downloads; sheet images instead use the
+   * short-lived presigned URL from getById (§6.5).
+   */
+  download(fileId: string): Observable<Blob> {
+    return this.http.get(`/composition-files/${fileId}/download`, {
+      responseType: 'blob',
+    });
   }
 
   remove(fileId: string): Observable<unknown> {
